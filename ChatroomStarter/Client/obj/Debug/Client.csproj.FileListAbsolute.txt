@@ -10,3 +10,9 @@ C:\Users\Andrew Jordan\Downloads\ChatroomStarter\ChatroomStarter\ChatroomStarter
 C:\Users\Andrew Jordan\Downloads\ChatroomStarter\ChatroomStarter\ChatroomStarter\ChatroomStarter\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
 C:\Users\Andrew Jordan\Downloads\ChatroomStarter\ChatroomStarter\ChatroomStarter\ChatroomStarter\Client\obj\Debug\Client.exe
 C:\Users\Andrew Jordan\Downloads\ChatroomStarter\ChatroomStarter\ChatroomStarter\ChatroomStarter\Client\obj\Debug\Client.pdb
+C:\Users\Andrew Jordan\Desktop\ChatRoom\ChatroomStarter\Client\bin\Debug\Client.exe.config
+C:\Users\Andrew Jordan\Desktop\ChatRoom\ChatroomStarter\Client\obj\Debug\Client.exe
+C:\Users\Andrew Jordan\Desktop\ChatRoom\ChatroomStarter\Client\obj\Debug\Client.pdb
+C:\Users\Andrew Jordan\Desktop\ChatRoom\ChatroomStarter\Client\bin\Debug\Client.exe
+C:\Users\Andrew Jordan\Desktop\ChatRoom\ChatroomStarter\Client\bin\Debug\Client.pdb
+C:\Users\Andrew Jordan\Desktop\ChatRoom\ChatroomStarter\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache

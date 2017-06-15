@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class Client
+    public class ServerClient
     {
         NetworkStream stream;
         TcpClient client;
         public string UserId;
-        public Client(NetworkStream Stream, TcpClient Client)
+        public ServerClient(NetworkStream Stream, TcpClient Client)
         {
             stream = Stream;
             client = Client;
-            UserId = "495933b6-1762-47a1-b655-483510072e73";
+            UserId =  System.Guid.NewGuid().ToString(); 
         }
         public void Send(string Message)
         {
@@ -31,6 +31,5 @@ namespace Server
             Console.WriteLine(recievedMessageString);
             return recievedMessageString;
         }
-
     }
 }
