@@ -19,10 +19,11 @@ namespace Client
             clientSocket = new TcpClient();
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
-             
+            SendUserName();
+
         }
         public void SendUserName()
-        {
+         {
             byte[] username = Encoding.ASCII.GetBytes(usernameInput);
             stream.Write(username, 0, username.Count());
         }
