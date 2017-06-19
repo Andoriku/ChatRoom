@@ -16,19 +16,28 @@ namespace Server
         {
             stream = Stream;
             client = Client;
-            UserId =  System.Guid.NewGuid().ToString(); 
+            UserId = System.Guid.NewGuid().ToString();
         }
         public void Send(string Message)
         {
             byte[] message = Encoding.ASCII.GetBytes(Message);
-            stream.Write(message, 0, message.Count());
+            try
+            {
+                foreach (TcpClient i in Server.activeList)
+                {
+                    stream.Write(message, 0, message.Count());
+                }
+            }
+            catch
+            {
+            }
         }
         public string RecieveUserName()
         {
 
             byte[] usernameInput = new byte[30];
             stream.Read(usernameInput, 0, usernameInput.Length);
-            string recievedMessageString = Encoding.ASCII.GetString(usernameInput);
+            string recievedMessageString = Encoding.ASCII.GetString(usernameInput).Replace("\0", string.Empty);
             Console.WriteLine(recievedMessageString);
             return recievedMessageString;
 
@@ -37,12 +46,22 @@ namespace Server
         {
 
             byte[] recievedMessage = new byte[256];
-            stream.Read(recievedMessage, 0, recievedMessage.Length);
-            string recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
+            try
+            {
+                stream.Read(recievedMessage, 0, recievedMessage.Length);
+            }
+            catch
+            {
+                string recievedAnswer = Server.username + " has logged off";
+                Console.WriteLine(recievedAnswer);
+                Server.ClientDictionary.Remove(Server.username);
+                return recievedAnswer;
+            }
+            string recievedMessageString = Encoding.ASCII.GetString(recievedMessage).Replace("\0", string.Empty);
+            Server.messageQueue.Enqueue(recievedMessageString);
             Console.WriteLine(recievedMessageString);
             messageQueue.Enqueue(recievedMessageString);
             return recievedMessageString;
-
         }
     }
 }

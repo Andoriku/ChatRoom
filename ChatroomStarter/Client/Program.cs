@@ -15,8 +15,7 @@ namespace Client
             {
                 client.Send();
                 client.Recieve();
-                Console.ReadLine();
-            } while (true);
+            } while (UI.exitCondition == false);
             
         }
     }

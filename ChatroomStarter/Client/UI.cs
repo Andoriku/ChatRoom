@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 namespace Client
 {
     public static class UI
+
     {
+        public static bool exitCondition=false;
         public static void DisplayMessage(string message,string username)
         {
             Console.WriteLine(username + ": " + message);
@@ -23,7 +25,7 @@ namespace Client
         {
             if (input.Equals("/leave"))
             {
-                Environment.Exit(0);
+                exitCondition = true;
             }
         }
         public static string GetUsername()

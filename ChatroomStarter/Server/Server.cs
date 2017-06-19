@@ -11,15 +11,16 @@ using System.Collections;
 
 namespace Server
 {
-    class Server
+    public class Server
     {
         public static ServerClient client;
         TcpListener server;
         public static string username;
         public bool serverUtilization;
         public bool checkValidator = false;
-        List<TcpClient> activeList = new List<TcpClient>();
-        public Queue<string> messageQueue = new Queue<string>();
+        public static List<TcpClient> activeList = new List<TcpClient>();
+        public static Queue<string> messageQueue = new Queue<string>();
+        public static Dictionary<string, string> ClientDictionary = new Dictionary<string, string>();
         public Server()
         {
             server = new TcpListener(IPAddress.Parse("127.0.0.1"), 9999);
@@ -27,8 +28,9 @@ namespace Server
         }
         public void Run()
         {
-            AcceptClient() ;
-            CheckKeys();
+
+            Task acceptClient = Task.Run(() => { AcceptClient(); CheckKeys(); });
+           
             do
             {
                 CheckserverUtilization();
@@ -74,10 +76,6 @@ namespace Server
 
             client.Send(body);
         }
-        public Dictionary<string, string> ClientDictionary = new Dictionary<string, string>
-        {
-
-        };
         public bool CheckserverUtilization()
         {
             if (ClientDictionary.Count == 0)
