@@ -23,21 +23,37 @@ namespace Client
 
         }
         public void SendUserName()
-         {
+        {
             byte[] username = Encoding.ASCII.GetBytes(usernameInput);
             stream.Write(username, 0, username.Count());
+            
         }
         public void Send()
         {
-            string messageString = UI.GetInput();
-            byte[] message = Encoding.ASCII.GetBytes(messageString);
-            stream.Write(message, 0, message.Count());
+            while (clientSocket.Connected == true)
+            {
+                string messageString = UI.GetInput();
+                byte[] message = Encoding.ASCII.GetBytes(messageString);
+                stream.Write(message, 0, message.Count());
+            }
         }
         public void Recieve()
         {
-            byte[] recievedMessage = new byte[256];
-            stream.Read(recievedMessage, 0, recievedMessage.Length);
-            UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage).Replace("\0", string.Empty), usernameInput);
+            while (true)
+            {
+                byte[] recievedMessage = new byte[256];
+                try
+                {
+                    stream.Read(recievedMessage, 0, recievedMessage.Length);
+                }
+                catch
+                {
+                    
+                    string recievedAnswer = "User has logged off";
+                    Console.WriteLine(recievedAnswer);
+                }
+                UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage).Replace("\0", string.Empty), usernameInput);
+            }
         }
     }
 }

@@ -8,15 +8,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
-
+using System.Diagnostics;
 namespace Server
 {
     public class Server
     {
         public static ServerClient client;
         TcpListener server;
+        public string message;
         public static string username;
-        public bool serverUtilization;
+        public bool serverUtilization = false;
         public bool checkValidator = false;
         public static List<TcpClient> activeList = new List<TcpClient>();
         public static Queue<string> messageQueue = new Queue<string>();
@@ -29,32 +30,51 @@ namespace Server
         public void Run()
         {
 
-            Task acceptClient = Task.Run(() => { AcceptClient(); CheckKeys(); });
-           
-            do
+            Task acceptClient = Task.Run(() => AcceptClient());
+            Task respond = Task.Run(() => Respond(message));
+            respond.Wait();
+        }
+        public string GetNewMessage()
+        {
+            try
             {
-                CheckserverUtilization();
-                string message = client.Recieve(messageQueue);
-                Respond(message);
-                CheckserverUtilization();
+                message = client.Recieve(messageQueue);
             }
-            while (serverUtilization == true);
-        }        
+            catch
+            {
+                AcceptClient();
+            }
+            return message;
+        }
         private void AcceptClient()
         {
-            TcpClient clientSocket = default(TcpClient);
-            activeList.Add(clientSocket);
-            clientSocket = server.AcceptTcpClient();
-            Console.WriteLine("Inital Connect");
-            NetworkStream stream = clientSocket.GetStream();
-            client = new ServerClient(stream, clientSocket);
+            do
+            {
+                TcpClient clientSocket = default(TcpClient);
+                activeList.Add(clientSocket);
+                clientSocket = server.AcceptTcpClient();
+                Console.WriteLine("Inital Connect");
+                NetworkStream stream = clientSocket.GetStream();
+                client = new ServerClient(stream, clientSocket);
+                CheckKeys();
+                Task newMessage = Task.Run(() => GetNewMessage());
+                CheckserverUtilization();
+            } while (true);
         }
         private void CheckKeys()
         {
-            username = client.RecieveUserName();
+            try
+            {
+                username = client.RecieveUserName();
+            }
+            catch
+            {
+                AcceptClient();
+            }
             if (ClientDictionary.ContainsKey(username))
             {
                 client.UserId = ClientDictionary.TryGetValue(username, out client.UserId).ToString();
+                checkValidator = true;
             }
             else
             {
@@ -67,14 +87,25 @@ namespace Server
         }
         private void AddUserToDictionary()
         {
-            
             Console.WriteLine(username + " is now Connected");
             ClientDictionary.Add(username, client.UserId);
         }
         private void Respond(string body)
         {
-
-            client.Send(body);
+            try
+            {
+                do
+                {
+                    foreach (TcpClient n in activeList)
+                    {
+                        client.Send(username + body);
+                    }
+                } while (messageQueue.Last() == body);
+            }
+            catch
+            {
+                GetNewMessage();
+            }
         }
         public bool CheckserverUtilization()
         {

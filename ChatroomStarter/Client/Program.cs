@@ -11,12 +11,21 @@ namespace Client
         static void Main(string[] args)
         {
             Client client = new Client("127.0.0.1", 9999);
-            do
+
+            Task sendMessage = Task.Run(() => client.Send());
+            Task reciveMessage = Task.Run(() => client.Recieve());
+            while (client.clientSocket.Connected == true)
             {
-                client.Send();
-                client.Recieve();
-            } while (UI.exitCondition == false);
-            
+                if (UI.EndCondition == true)
+                {
+                    client.clientSocket.Close();
+                }
+                else
+                {
+                    continue;
+                }
+            }
+           
         }
     }
 }

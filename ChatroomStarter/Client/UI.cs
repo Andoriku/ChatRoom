@@ -10,7 +10,7 @@ namespace Client
     public static class UI
 
     {
-        public static bool exitCondition=false;
+        public static bool EndCondition = false;
         public static void DisplayMessage(string message,string username)
         {
             Console.WriteLine(username + ": " + message);
@@ -23,9 +23,13 @@ namespace Client
         }
         public static void CheckInput(string input)
         {
-            if (input.Equals("/leave"))
+            if (input == "/leave")
             {
-                exitCondition = true;
+                EndCondition = true;
+            }
+            else
+            {
+                EndCondition = false;
             }
         }
         public static string GetUsername()

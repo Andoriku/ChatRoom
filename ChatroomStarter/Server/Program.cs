@@ -11,7 +11,10 @@ namespace Server
         static void Main(string[] args)
         {
            Server runningServer = new Server();
-            runningServer.Run();
+            do
+            {
+                runningServer.Run();
+            } while (Server.ClientDictionary.Count > 0);
             Console.ReadLine();
 
         }
