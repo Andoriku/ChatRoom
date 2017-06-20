@@ -19,12 +19,9 @@ namespace Server
             UserId = System.Guid.NewGuid().ToString();
         }
         public void Send(string Message)
-        {
-            do
-            {
-                byte[] message = Encoding.ASCII.GetBytes(Message);
+        { 
+                byte[] message = Encoding.ASCII.GetBytes(Server.username + Message);
                 stream.Write(message, 0, message.Count());
-            } while (true);
         }
         public string RecieveUserName()
         {

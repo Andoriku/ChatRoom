@@ -29,10 +29,8 @@ namespace Server
         }
         public void Run()
         {
-
             Task acceptClient = Task.Run(() => AcceptClient());
-            Task respond = Task.Run(() => Respond(message));
-            respond.Wait();
+    
         }
         public string GetNewMessage()
         {
@@ -58,8 +56,13 @@ namespace Server
                 client = new ServerClient(stream, clientSocket);
                 CheckKeys();
                 Task newMessage = Task.Run(() => GetNewMessage());
+                while (newMessage.IsCompleted)
+                {
+                    Task respond = Task.Run(() => Respond(message));
+                }
                 CheckserverUtilization();
             } while (true);
+           
         }
         private void CheckKeys()
         {
@@ -96,10 +99,7 @@ namespace Server
             {
                 do
                 {
-                    foreach (TcpClient n in activeList)
-                    {
                         client.Send(username + body);
-                    }
                 } while (messageQueue.Last() == body);
             }
             catch
